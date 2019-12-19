@@ -1,29 +1,30 @@
-select *
-from `data-engineering-prod.u_james_hendry.printComms_rca_20191218` pc
 
+/*Add the globalAccountId from v_Account to the Account_No from the Orion list
+select pc.*, Account_Global_ID
+from `data-engineering-prod.u_james_hendry.printComms_20191218` pc
+join `data-engineering-prod.reporting_crm.v_Account` ra on pc.accountId = ra.Account_No
+*/
 
+/*Join the Orion list (from above) with the global topic, the auto-capture CIP topic and the gentrack Account SDM table*/
 select distinct
   pc.AccountId,
   pc.Account_Global_ID,
   pc.CreatedAt,
   '!!!!!!!!' as space1,
   gp.gpAccountGlotoId,
-  --gp.gpSourceFieldGt,
   gp.gpAccountNo,
-  --gp.gpSourceFieldSf,
-  --gp.gpGlobalAccountId,
   gp.printComms,
   gp.gpEventCreatedAt,
   '!!!!!!!!' as space2,
-  --ac.acGlobalAccountId,
   ac.acPrintComms,
   ac.acInsertTime,
   '!!!!!!!!' as space3,
-  --sdg.sdgACCTNO,
   sdg.sdgInsertTime
 
-from `data-engineering-prod.u_james_hendry.printComms_rca_20191218` pc
+--Orion list
+from `data-engineering-prod.u_james_hendry.printComms_rca_20181218` pc
 
+--global topic
 join (
   select
     accountId as gpAccountGlotoId,
@@ -41,6 +42,7 @@ join (
   and ksf.key = 'globalAccountId'
   and ss.name = 'printCommunications' ) gp on pc.AccountId = gp.gpAccountNo
 
+--Auto-capture'd CIP topic
 join (
   select
     globalAccountId as acGlobalAccountId,
@@ -49,6 +51,7 @@ join (
     kafkaData.insertTime as acInsertTime
   from `data-engineering-prod.auto_capture_v2_secure.psr_entry_update_v1`  ) ac on pc.Account_Global_ID =  ac.acGlobalAccountId
 
+--Gentrack Account SDM topic
 join (
   select
     cast(ACCTNO as string) as sdgACCTNO,
@@ -62,7 +65,3 @@ order by
   ac.acInsertTime desc,
   gp.gpEventCreatedAt desc
 
-
-select pc.*,ra.Account_No, Account_Global_ID
-from `data-engineering-prod.u_james_hendry.printComms_20191218` pc
-join `data-engineering-prod.reporting_crm.v_Account` ra on pc.accountId = ra.Account_No
