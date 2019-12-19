@@ -1,19 +1,25 @@
+select *
+from `data-engineering-prod.u_james_hendry.printComms_rca_20191218` pc
+
+
 select distinct
   pc.AccountId,
   pc.Account_Global_ID,
+  pc.CreatedAt,
   '!!!!!!!!' as space1,
   gp.gpAccountGlotoId,
-  gp.gpSourceFieldGt,
+  --gp.gpSourceFieldGt,
   gp.gpAccountNo,
-  gp.gpSourceFieldSf,
-  gp.gpGlobalAccountId,
+  --gp.gpSourceFieldSf,
+  --gp.gpGlobalAccountId,
   gp.printComms,
   gp.gpEventCreatedAt,
   '!!!!!!!!' as space2,
-  ac.acGlobalAccountId,
+  --ac.acGlobalAccountId,
   ac.acPrintComms,
   ac.acInsertTime,
-  sdg.sdgACCTNO,
+  '!!!!!!!!' as space3,
+  --sdg.sdgACCTNO,
   sdg.sdgInsertTime
 
 from `data-engineering-prod.u_james_hendry.printComms_rca_20191218` pc
@@ -57,6 +63,6 @@ order by
   gp.gpEventCreatedAt desc
 
 
---select pc.accountId,ra.Account_No, Account_Global_ID
---from `data-engineering-prod.u_james_hendry.printComms_20191218` pc
---join `data-engineering-prod.reporting_crm.v_Account` ra on pc.accountId = ra.Account_No
+select pc.*,ra.Account_No, Account_Global_ID
+from `data-engineering-prod.u_james_hendry.printComms_20191218` pc
+join `data-engineering-prod.reporting_crm.v_Account` ra on pc.accountId = ra.Account_No
