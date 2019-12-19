@@ -40,7 +40,8 @@ join (
   left join gp.services.services ss
   where kg.key = 'ACCTNO'
   and ksf.key = 'globalAccountId'
-  and ss.name = 'printCommunications' ) gp on pc.AccountId = gp.gpAccountNo
+  and ss.name = 'printCommunications'
+   ) gp on pc.AccountId = gp.gpAccountNo
 
 --Auto-capture'd CIP topic
 join (
@@ -49,7 +50,8 @@ join (
     services.communications.print as acPrintComms,
     --metadata as acMetadata,
     kafkaData.insertTime as acInsertTime
-  from `data-engineering-prod.auto_capture_v2_secure.psr_entry_update_v1`  ) ac on pc.Account_Global_ID =  ac.acGlobalAccountId
+  from `data-engineering-prod.auto_capture_v2_secure.psr_entry_update_v1`
+  ) ac on pc.Account_Global_ID =  ac.acGlobalAccountId
 
 --Gentrack Account SDM topic
 join (
@@ -57,7 +59,8 @@ join (
     cast(ACCTNO as string) as sdgACCTNO,
 ACEXTNALREF,
     kafkaData.insertTime as sdgInsertTime
-  from `source-data-mirror-prod.genprod_events.dataAvailability_genprod_dbo_ACCOUNTS_sourceMirror_v1` sdg  ) sdg on pc.AccountId = sdg.sdgACCTNO
+  from `source-data-mirror-prod.genprod_events.dataAvailability_genprod_dbo_ACCOUNTS_sourceMirror_v1` sdg
+  ) sdg on pc.AccountId = sdg.sdgACCTNO
 
 order by
   pc.AccountId,
