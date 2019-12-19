@@ -5,6 +5,7 @@ select distinct
   gp.gpPrintComms,
   gp.gpEventCreatedAt,
   '!!!!!!!!' as space2,
+  ac.acGlobalAccountId,
   ac.acPrintComms,
   ac.acInsertTime,
   '!!!!!!!!' as space3,
@@ -31,6 +32,7 @@ from (
   where kg.key = 'ACCTNO'
   and ksf.key = 'globalAccountId'
   and ss.name = 'printCommunications'
+  and accountId = '2a7bcc11-3615-517b-ab9c-0e398dfc917b'
    ) gp
 
 --Auto-capture'd CIP topic
